@@ -40,21 +40,6 @@ async def choose_role(interaction: discord.Interaction, role: str):
         await interaction.response.send_message("Rôle invalide. Choisis parmi adc, support, mid, jungle ou top.")
 
 
-
-# @bot.tree.command(name="create_team")
-# async def create_team(interaction: discord.Interaction):
-
-    
-#         response = requests.get(f"{api_base_url}/champions/get_team")
-#         champion = response.json()
-
-        
-    
-#         team_message = f"Composition de l'équipe :\n  {champion}"
-        
-
-#         await interaction.response.send_message(team_message)
-
 @bot.tree.command(name="create_team")
 async def create_team(interaction: discord.Interaction):
     try:
