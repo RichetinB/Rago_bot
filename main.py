@@ -39,9 +39,9 @@ async def choose_role(interaction: discord.Interaction, role: str):
     else:
         await interaction.response.send_message("Rôle invalide. Choisis parmi adc, support, mid, jungle ou top.")
 
-
 @bot.tree.command(name="create_team")
 async def create_team(interaction: discord.Interaction):
+    roles = ['top', 'jungle', 'mid', 'adc', 'support']
     try:
         response = requests.get(f"{api_base_url}/champions/get_team")
         teams = response.json()
@@ -49,24 +49,22 @@ async def create_team(interaction: discord.Interaction):
         blue_side_champions = teams.get("blue_side", [])
         red_side_champions = teams.get("red_side", [])
 
-        message = ""
+        embed = discord.Embed(title="Composition des équipes", color=0x00ff00)
 
         if blue_side_champions:
-            message += "Composition de l'équipe (Blue Side):\n"
-            for champion in blue_side_champions:
-                # roles = ['top', 'jungle', 'mid', 'adc', 'support']
-                message += f"{champion['name']}\n"
-            message += "\n"
+            blue_side_message = ""
+            for role, champion in zip(roles, blue_side_champions):
+                blue_side_message += f"{role.capitalize()}: {champion['name']}\n"
+            embed.add_field(name="Blue Side", value=blue_side_message, inline=False)
 
         if red_side_champions:
-            message += "Composition de l'équipe (Red Side):\n"
-            for champion in red_side_champions:
-                # roles = ['top', 'jungle', 'mid', 'adc', 'support']
-                message += f"{champion['name']}\n"
-            message += "\n"
+            red_side_message = ""
+            for role, champion in zip(roles, red_side_champions):
+                red_side_message += f"{role.capitalize()}: {champion['name']}\n"
+            embed.add_field(name="Red Side", value=red_side_message, inline=False)
 
-        if message:
-            await interaction.response.send_message(message)
+        if embed.fields:
+            await interaction.response.send_message(embed=embed)
         else:
             await interaction.response.send_message("Aucun champion trouvé pour l'équipe Blue Side et Red Side.")
 
@@ -74,8 +72,5 @@ async def create_team(interaction: discord.Interaction):
         error_message = "Une erreur s'est produite lors de la création de l'équipe. Veuillez réessayer plus tard."
         print(f"Erreur lors de la récupération de l'équipe : {e}")
         await interaction.response.send_message(error_message)
-
-
-
 
 bot.run(bot_token)
