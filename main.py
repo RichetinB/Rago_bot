@@ -68,6 +68,10 @@ async def create_team(interaction: discord.Interaction):
         else:
             await interaction.response.send_message("Aucun champion trouvé pour l'équipe Blue Side et Red Side.")
 
+        
+        blue_side_champions = []
+        red_side_champions = []
+
     except Exception as e:
         error_message = "Une erreur s'est produite lors de la création de l'équipe. Veuillez réessayer plus tard."
         print(f"Erreur lors de la récupération de l'équipe : {e}")
